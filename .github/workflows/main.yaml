@@ -35,7 +35,8 @@ jobs:
 
       - name: Install Utilities
         run: |
-          sudo apt-get update
+          # sudo apt-get update
+          sudo apt-get update && apt-get install -y --no-install-recommends apt-utils
           sudo apt-get install -y jq unzip
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
