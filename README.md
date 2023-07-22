@@ -1,4 +1,4 @@
-## End to End Machine Learning Project (for practice purpose only)
+## End to End Machine Learning Project (for practice purposes only)
 Docker Build.\
 Github Workflow.\
 ECR Setup In AWS (build and push ecr image). \
@@ -13,4 +13,4 @@ Configure EC2 as self-hosted runner:
 (3). AWS cloud using CICD pipelines. \
 (4). Or Azure cloud using Github Actions.
 
-Please also refer to https://www.youtube.com/playlist?list=PLZoTAELRMXVPS-dOaVbAux22vzqdgoGhG, thanks
+Many thanks to Krish Naik's invaluable contributions.
