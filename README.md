@@ -13,4 +13,7 @@ Configure EC2 as self-hosted runner:
 (3). AWS cloud using CICD pipelines. \
 (4). Or Azure cloud using Github Actions.
 
-Many thanks to Krish Naik's good guidances!
+Acknowledge:
+(1). Many thanks to Krish Naik's good guidances! \
+(2). Youtube. \
+(3). Udemy. 
