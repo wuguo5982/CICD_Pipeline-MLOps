@@ -14,6 +14,6 @@ Configure EC2 as self-hosted runner.
 (4). Or Azure cloud using Github Actions.
 
 Acknowledge: <br>
-(1). Many thanks to Krish Naik's good guidances! \
+(1). Many thanks to excellent guidances from Krish Naik (Youtube) and Mumshad Mannambeth (KodeKloud)! \
 (2). Youtube. \
 (3). Udemy. 
