@@ -16,5 +16,5 @@ Configure EC2 as self-hosted runner.
 Acknowledge: <br>
 (1). Many thanks to excellent guidances from Krish Naik (Youtube) and Mumshad Mannambeth (KodeKloud)! \
 (2). Youtube. \
-(3). Udemy. \
-(4). Others
+(3). Udemy. 
+
