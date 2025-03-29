@@ -20,7 +20,8 @@ This project demonstrates the complete lifecycle of building, containerizing, an
    - Configure **EC2 instances** for deployment using self-hosted GitHub runners
 
 4. **✅ Continuous Integration (CI)**
-   - Implementation of **CodeBuild** and **CodePipeline** for automated testing and build stages
+   - Leverage **AWS CodeCommit**, **CodeBuild**, and **CodePipeline**  
+   - Automate code integration, testing, and packaging in response to repository updates
 
 5. **🚀 Continuous Deployment (CD)**
    - Deploys containerized applications to EC2 instances via CI/CD workflows  
