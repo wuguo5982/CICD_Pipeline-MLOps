@@ -1,4 +1,4 @@
-## ⚙️ End-to-End Machine Learning Project
+## ☘️ End-to-End Machine Learning Project
 
 This project demonstrates the complete lifecycle of building, containerizing, and deploying a machine learning model using industry-standard **DevOps** and **MLOps** practices.  
 >  *Note: This project is intended for educational and hands-on practice purposes.*
