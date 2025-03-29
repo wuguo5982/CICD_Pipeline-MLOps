@@ -26,7 +26,11 @@ This project demonstrates the complete lifecycle of building, containerizing, an
 5. **🚀 Continuous Deployment (CD)**
    - Deploys containerized applications to EC2 instances via CI/CD workflows  
    - Uses GitHub-hosted or self-hosted runners for production-style simulation
-
+     
+6. **🖥️ Notifications & Monitoring**
+   - Amazon SNS for notifications
+   - Amazon CloudWatch for monitoring and alarms
+   - AWS CloudTrail for auditing
 ---
 
 ### 🖥️ EC2 Setup & Deployment Instructions
@@ -34,7 +38,7 @@ This project demonstrates the complete lifecycle of building, containerizing, an
 - Install and configure **Docker** on the EC2 instance  
 - Register EC2 as a **self-hosted GitHub Actions runner**  
 - Secure the instance and configure access to **ECR & S3 (optional)**  
-- Trigger automated deployment via GitHub Actions upon code push or PR
+- Trigger automated deployment via GitHub Actions upon code push
 
 ---
 
