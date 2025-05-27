@@ -150,9 +150,7 @@ Results are logged to Airflow task logs, making this pipeline lightweight and pr
 # DAG Graph Overview
 
 This DAG represents the ML pipeline for insurance data:
-
 ![DAG Graph](dag_graph.png)
-
 - The graph includes tasks for data loading, feature engineering, model training, evaluation, A/B testing, and batch inference.
 - Generated using Airflow Graph View.
 """
