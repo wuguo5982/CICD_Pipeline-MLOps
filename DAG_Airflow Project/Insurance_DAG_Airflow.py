@@ -1,5 +1,6 @@
 """
 Project Overview:
+
 This project demonstrates the use of Airflow DAGs implemented via the Astro platform and Docker, integrated with VS Code. 
 It builds an advanced machine learning pipeline for processing insurance data.
 
