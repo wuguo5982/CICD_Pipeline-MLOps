@@ -1,39 +1,39 @@
-## ☘️ End-to-End Machine Learning Project
+## End-to-End Machine Learning Project
 
 This project demonstrates the complete lifecycle of building, containerizing, and deploying a machine learning model using industry-standard **DevOps** and **MLOps** practices.  
 >  *Note: This project is intended for educational and hands-on practice purposes.*
 
 ---
 
-### 🚀 Core Components
+### Core Components
 
-1. **🧱 Dockerization**
+1. ** Dockerization**
    - Containerization of ML applications using Docker and Kubernetes  
    - Creation of reproducible, platform-independent environments
 
-2. **🔁 GitHub Actions Workflow**
+2. ** GitHub Actions Workflow**
    - Automates testing, building, and deployment pipelines  
    - Enables CI/CD integration directly from GitHub repositories
 
-3. **☁️ AWS ECR & EC2 Integration**
+3. ** AWS ECR & EC2 Integration**
    - Build and push Docker images to **Amazon Elastic Container Registry (ECR)**  
    - Configure **EC2 instances** for deployment using self-hosted GitHub runners
 
-4. **✅ Continuous Integration (CI)**
+4. ** Continuous Integration (CI)**
    - Leverage **AWS CodeCommit**, **CodeBuild**, and **CodePipeline**  
    - Automate code integration, testing, and packaging in response to repository updates
 
-5. **🚀 Continuous Deployment (CD)**
+5. ** Continuous Deployment (CD)**
    - Deploys containerized applications to EC2 instances via CI/CD workflows  
    - Uses GitHub-hosted or self-hosted runners for production-style simulation
      
-6. **🖥️ Notifications & Monitoring**
+6. ** Notifications & Monitoring**
    - Amazon SNS for notifications
    - Amazon CloudWatch for monitoring and alarms
    - AWS CloudTrail for auditing
 ---
 
-### 🖥️ EC2 Setup & Deployment Instructions
+### EC2 Setup & Deployment Instructions
 
 - Install and configure **Docker** on the EC2 instance  
 - Register EC2 as a **self-hosted GitHub Actions runner**  
@@ -42,7 +42,7 @@ This project demonstrates the complete lifecycle of building, containerizing, an
 
 ---
 
-### ⚙️ Web App & API Integration
+### Web App & API Integration
 
 - **Flask-based Web Application**
    - Serves trained ML models through a simple user interface
@@ -54,7 +54,7 @@ This project demonstrates the complete lifecycle of building, containerizing, an
 
 ---
 
-### 📦 Deployment Scenarios (Practice Use Cases)
+### Deployment Scenarios (Practice Use Cases)
 
 - Develop and containerize ML pipelines  
 - Simulate production deployment on **AWS EC2** using Docker and CI/CD  
@@ -63,12 +63,12 @@ This project demonstrates the complete lifecycle of building, containerizing, an
 
 ---
 
-### 🙏 Acknowledgements
+### Acknowledgements
 
 This learning project is inspired by excellent instructional content from:
 
-- 📺 **YouTube ML & DevOps Channels**  
-- 🎓 **Udemy Courses**  
-- ☁️ **KodeCloud DevOps Bootcamps**
+-  **YouTube ML & DevOps Channels**  
+-  **Udemy Courses**  
+-  **KodeCloud DevOps Bootcamps**
 
 ---
