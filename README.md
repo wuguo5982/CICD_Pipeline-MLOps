@@ -5,7 +5,7 @@ This project demonstrates the complete lifecycle of building, containerizing, an
 
 ---
 
-### Core Components
+### Core Components:
 
 1. **Dockerization**
    - Containerization of ML applications using Docker and Kubernetes  
