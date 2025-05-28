@@ -19,7 +19,7 @@ This project demonstrates the complete lifecycle of building, containerizing, an
        - Build and push Docker images to **Amazon Elastic Container Registry (ECR)**  
        - Configure **EC2 instances** for deployment using self-hosted GitHub runners
    
-   - **(4). Continuous Integration (CI)**
+   - **Continuous Integration (CI)**
        - Leverage **AWS CodeCommit**, **CodeBuild**, and **CodePipeline**  
        - Automate code integration, testing, and packaging in response to repository updates
    
@@ -28,9 +28,9 @@ This project demonstrates the complete lifecycle of building, containerizing, an
        - Uses GitHub-hosted or self-hosted runners for production-style simulation
         
    **Notifications & Monitoring**
-        - Amazon SNS for notifications
-        - Amazon CloudWatch for monitoring and alarms
-        - AWS CloudTrail for auditing
+       - Amazon SNS for notifications
+       - Amazon CloudWatch for monitoring and alarms
+       - AWS CloudTrail for auditing
 ---
 
 ### 2. EC2 Setup & Deployment Instructions
