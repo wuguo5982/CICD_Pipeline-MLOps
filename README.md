@@ -7,30 +7,30 @@ This project demonstrates the complete lifecycle of building, containerizing, an
 
 ### 1. Core Components:
 
-**1). Dockerization**
-   - Containerization of ML applications using Docker and Kubernetes  
-   - Creation of reproducible, platform-independent environments
-
-**2). GitHub Actions Workflow**
-   - Automates testing, building, and deployment pipelines  
-   - Enables CI/CD integration directly from GitHub repositories
-
-**3). AWS ECR & EC2 Integration**
-   - Build and push Docker images to **Amazon Elastic Container Registry (ECR)**  
-   - Configure **EC2 instances** for deployment using self-hosted GitHub runners
-
-**4). Continuous Integration (CI)**
-   - Leverage **AWS CodeCommit**, **CodeBuild**, and **CodePipeline**  
-   - Automate code integration, testing, and packaging in response to repository updates
-
-**5). Continuous Deployment (CD)**
-   - Deploys containerized applications to EC2 instances via CI/CD workflows  
-   - Uses GitHub-hosted or self-hosted runners for production-style simulation
-     
-**6). Notifications & Monitoring**
-   - Amazon SNS for notifications
-   - Amazon CloudWatch for monitoring and alarms
-   - AWS CloudTrail for auditing
+   **1). Dockerization**
+      - Containerization of ML applications using Docker and Kubernetes  
+      - Creation of reproducible, platform-independent environments
+   
+   **2). GitHub Actions Workflow**
+      - Automates testing, building, and deployment pipelines  
+      - Enables CI/CD integration directly from GitHub repositories
+   
+   **3). AWS ECR & EC2 Integration**
+      - Build and push Docker images to **Amazon Elastic Container Registry (ECR)**  
+      - Configure **EC2 instances** for deployment using self-hosted GitHub runners
+   
+   **4). Continuous Integration (CI)**
+      - Leverage **AWS CodeCommit**, **CodeBuild**, and **CodePipeline**  
+      - Automate code integration, testing, and packaging in response to repository updates
+   
+   **5). Continuous Deployment (CD)**
+      - Deploys containerized applications to EC2 instances via CI/CD workflows  
+      - Uses GitHub-hosted or self-hosted runners for production-style simulation
+        
+   **6). Notifications & Monitoring**
+      - Amazon SNS for notifications
+      - Amazon CloudWatch for monitoring and alarms
+      - AWS CloudTrail for auditing
 ---
 
 ### 2. EC2 Setup & Deployment Instructions
@@ -44,11 +44,11 @@ This project demonstrates the complete lifecycle of building, containerizing, an
 
 ### 3. Web App & API Integration
 
-- **1). Flask-based Web Application**
+- **. Flask-based Web Application**
    - Serves trained ML models through a simple user interface
    - Handles prediction requests and response formatting
 
-- **2). FastAPI-based RESTful API**
+- **. FastAPI-based RESTful API**
    - Scalable, production-ready API for serving models  
    - Supports async endpoints, JSON serialization, and OpenAPI documentation
 
