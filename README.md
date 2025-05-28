@@ -7,15 +7,15 @@ This project demonstrates the complete lifecycle of building, containerizing, an
 
 ### 1. Core Components:
 
-   - **(1). Dockerization**
+   - **Dockerization**
        - Containerization of ML applications using Docker and Kubernetes  
        - Creation of reproducible, platform-independent environments
    
-   - **(2). GitHub Actions Workflow**
+   - **GitHub Actions Workflow**
        - Automates testing, building, and deployment pipelines  
        - Enables CI/CD integration directly from GitHub repositories
    
-   - **(3). AWS ECR & EC2 Integration**
+   - **AWS ECR & EC2 Integration**
        - Build and push Docker images to **Amazon Elastic Container Registry (ECR)**  
        - Configure **EC2 instances** for deployment using self-hosted GitHub runners
    
@@ -23,11 +23,11 @@ This project demonstrates the complete lifecycle of building, containerizing, an
        - Leverage **AWS CodeCommit**, **CodeBuild**, and **CodePipeline**  
        - Automate code integration, testing, and packaging in response to repository updates
    
-   - **(5). Continuous Deployment (CD)**
+   - **Continuous Deployment (CD)**
        - Deploys containerized applications to EC2 instances via CI/CD workflows  
        - Uses GitHub-hosted or self-hosted runners for production-style simulation
         
-   **(6). Notifications & Monitoring**
+   **Notifications & Monitoring**
         - Amazon SNS for notifications
         - Amazon CloudWatch for monitoring and alarms
         - AWS CloudTrail for auditing
