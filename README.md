@@ -27,7 +27,7 @@ This project demonstrates the complete lifecycle of building, containerizing, an
        - Deploys containerized applications to EC2 instances via CI/CD workflows  
        - Uses GitHub-hosted or self-hosted runners for production-style simulation
         
-   **Notifications & Monitoring**
+   - **Notifications & Monitoring**
        - Amazon SNS for notifications
        - Amazon CloudWatch for monitoring and alarms
        - AWS CloudTrail for auditing
