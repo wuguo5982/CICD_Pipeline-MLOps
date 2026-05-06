@@ -1,11 +1,5 @@
 
-# Improved Healthcare FWA with Grounded RAG
-
-A final merged, enterprise-style healthcare Fraud, Waste, and Abuse (FWA) analytics project.
-
-This version combines the earlier Streamlit analytics dashboard with the newer production-ready Production interactive API workflow.
-
----
+# Improved Healthcare Claims with Grounded RAG (Deployment)
 
 ## 1. Project Purpose
 
