@@ -20,8 +20,90 @@ This project demonstrates how to build an AI-assisted healthcare FWA review-prio
 - hallucination reduction
 - LLM-as-judge evaluation
 - production-style Streamlit UI
+- CI/CD Pipeline: GitHub Actions
 
 Important: this project is for educational and analytics demonstration only. It is not a medical diagnosis tool, not a claims denial engine, and not a final fraud determination system.
+
+---
+
+## CI/CD Pipeline: GitHub Actions + AWS
+
+This project also includes a real CI/CD implementation for GitHub Actions and AWS deployment.
+
+### Added CI/CD files
+
+```text
+.github/workflows/ci-cd.yml
+Dockerfile
+.dockerignore
+scripts/check_imports.py
+scripts/validate_data.py
+tests/test_ci_smoke.py
+tests/test_streamlit_file.py
+deployment/aws/apprunner.yaml
+deployment/aws/ecs-task-definition.json
+deployment/aws/README_AWS_DEPLOYMENT.md
+```
+
+### GitHub Actions workflow
+
+The workflow performs:
+
+1. Python dependency installation
+2. import smoke tests
+3. data validation
+4. Streamlit syntax compilation
+5. unit tests with pytest
+6. Docker image build
+7. Amazon ECR image push for main/master branch
+
+### Required GitHub secrets for AWS
+
+Add these repository secrets:
+
+```text
+AWS_ROLE_TO_ASSUME
+AWS_ACCOUNT_ID
+```
+
+### OpenAI API key
+
+Do not commit API keys.
+
+Use:
+
+```text
+OPENAI_API_KEY
+```
+
+as:
+
+- local environment variable
+- GitHub secret
+- AWS Secrets Manager secret
+- App Runner/ECS runtime secret
+
+### Local CI commands
+
+```bash
+python scripts/check_imports.py
+python scripts/validate_data.py
+pytest -q
+python -m py_compile app/streamlit_app.py
+```
+
+### Docker local run
+
+```bash
+docker build -t healthcare-fwa-grounded-rag .
+docker run -p 8501:8501 healthcare-fwa-grounded-rag
+```
+
+With GPT-4o-mini:
+
+```bash
+docker run -p 8501:8501 -e OPENAI_API_KEY=your_key healthcare-fwa-grounded-rag
+```
 
 ---
 
@@ -216,84 +298,3 @@ http://localhost:8501
 Built an enterprise-style healthcare FWA analytics platform using grounded RAG, GPT-4o-mini reasoning, claims/document analytics, hallucination reduction, validation checks, and LLM-as-judge evaluation to support explainable AI-assisted fraud review prioritization.
 
 
-
----
-
-## CI/CD Pipeline: GitHub Actions + AWS
-
-This project also includes a real CI/CD implementation for GitHub Actions and AWS deployment.
-
-### Added CI/CD files
-
-```text
-.github/workflows/ci-cd.yml
-Dockerfile
-.dockerignore
-scripts/check_imports.py
-scripts/validate_data.py
-tests/test_ci_smoke.py
-tests/test_streamlit_file.py
-deployment/aws/apprunner.yaml
-deployment/aws/ecs-task-definition.json
-deployment/aws/README_AWS_DEPLOYMENT.md
-```
-
-### GitHub Actions workflow
-
-The workflow performs:
-
-1. Python dependency installation
-2. import smoke tests
-3. data validation
-4. Streamlit syntax compilation
-5. unit tests with pytest
-6. Docker image build
-7. Amazon ECR image push for main/master branch
-
-### Required GitHub secrets for AWS
-
-Add these repository secrets:
-
-```text
-AWS_ROLE_TO_ASSUME
-AWS_ACCOUNT_ID
-```
-
-### OpenAI API key
-
-Do not commit API keys.
-
-Use:
-
-```text
-OPENAI_API_KEY
-```
-
-as:
-
-- local environment variable
-- GitHub secret
-- AWS Secrets Manager secret
-- App Runner/ECS runtime secret
-
-### Local CI commands
-
-```bash
-python scripts/check_imports.py
-python scripts/validate_data.py
-pytest -q
-python -m py_compile app/streamlit_app.py
-```
-
-### Docker local run
-
-```bash
-docker build -t healthcare-fwa-grounded-rag .
-docker run -p 8501:8501 healthcare-fwa-grounded-rag
-```
-
-With GPT-4o-mini:
-
-```bash
-docker run -p 8501:8501 -e OPENAI_API_KEY=your_key healthcare-fwa-grounded-rag
-```
