@@ -1,19 +1,20 @@
-# FROM python:3.8-slim-buster
-# WORKDIR /app
-# COPY . /app
+FROM python:3.11-slim
 
-# RUN apt update -y && apt install awscli -y
-
-# RUN pip install -r requirements.txt
-# CMD ["python3", "app.py"]
-
-
-
-FROM python:3.8-slim-buster
 WORKDIR /app
-COPY . /app
 
-RUN apt update -y && apt install awscli -y
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+ENV PIP_NO_CACHE_DIR=1
 
-RUN apt-get update && apt-get install ffmpeg libsm6 libxext6 unzip -y && pip install -r requirements.txt
-CMD ["python3", "app.py"]
+COPY requirements.txt .
+
+RUN python -m pip install --upgrade pip \
+    && pip install -r requirements.txt
+
+COPY . .
+
+EXPOSE 8501
+
+HEALTHCHECK CMD python scripts/check_imports.py || exit 1
+
+CMD ["streamlit", "run", "app/streamlit_app.py", "--server.address=0.0.0.0", "--server.port=8501"]
