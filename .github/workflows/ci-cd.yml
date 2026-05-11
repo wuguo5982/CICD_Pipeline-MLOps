@@ -11,7 +11,7 @@ on:
 
 defaults:
   run:
-    working-directory: "CMS FWA Detection Multi-Agent RAG Chatbot"
+    working-directory: "Deployment of CMS Healthcare Multi-Agent RAG"
 
 env:
   AWS_REGION: us-east-1
