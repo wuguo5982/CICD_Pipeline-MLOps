@@ -7,25 +7,20 @@ on:
     branches: [ main, master ]
   workflow_dispatch:
 
-
-
-defaults:
-  run:
-    working-directory: "Deployment of CMS Healthcare Multi-Agent RAG"
-
 env:
   AWS_REGION: us-east-1
   ECR_REPOSITORY: cms-fwa-rag-chatbot
   IMAGE_NAME: cms-fwa-rag-chatbot
+  PROJECT_DIR: "Deployment of CMS Healthcare Multi-Agent RAG"
 
 jobs:
   test:
     name: Test, Validate, and Build
     runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        python-version: ["3.10", "3.11"]
+    defaults:
+      run:
+        working-directory: ${{ env.PROJECT_DIR }}
 
     steps:
       - name: Checkout repository
@@ -34,11 +29,10 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: ${{ matrix.python-version }}
+          python-version: "3.11"
 
       - name: Upgrade pip
-        run: |
-          python -m pip install --upgrade pip
+        run: python -m pip install --upgrade pip
 
       - name: Install dependencies
         run: |
@@ -46,33 +40,27 @@ jobs:
           pip install pytest
 
       - name: Generate demo data
-        run: |
-          python -m src.generate_sample_data
+        run: python -m src.generate_sample_data
 
       - name: Build RAG index
-        run: |
-          python store_index.py
+        run: python store_index.py
 
       - name: Import smoke test
-        run: |
-          python scripts/check_imports.py
+        run: python scripts/check_imports.py
 
       - name: Validate data files
-        run: |
-          python scripts/validate_data.py
+        run: python scripts/validate_data.py
 
-      - name: Compile Streamlit and Flask apps
+      - name: Compile apps
         run: |
           python -m py_compile streamlit_app.py
           python -m py_compile app.py
 
       - name: Run tests
-        run: |
-          pytest -q
+        run: pytest -q
 
       - name: Build Docker image
-        run: |
-          docker build -t $IMAGE_NAME:ci .
+        run: docker build -t $IMAGE_NAME:ci .
 
   aws-ecr:
     name: Build and Push Docker Image to AWS ECR
@@ -80,18 +68,19 @@ jobs:
     needs: test
     if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
 
-    permissions:
-      id-token: write
-      contents: read
+    defaults:
+      run:
+        working-directory: ${{ env.PROJECT_DIR }}
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Configure AWS credentials with OIDC
+      - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
 
       - name: Login to Amazon ECR
@@ -117,4 +106,3 @@ jobs:
       - name: Deployment note
         run: |
           echo "Docker image pushed to Amazon ECR."
-          echo "Deploy latest image using AWS App Runner, ECS Fargate, or EC2 Docker."
