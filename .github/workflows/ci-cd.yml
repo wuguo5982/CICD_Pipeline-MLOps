@@ -154,7 +154,7 @@ jobs:
 
       - name: Run Claims import smoke test
         run: |
-          python scripts/check_imports.py
+          PYTHONPATH="$GITHUB_WORKSPACE/${{ env.CLAIMS_PROJECT_DIR }}" python scripts/check_imports.py
 
       - name: Validate Claims data files
         run: |
@@ -167,7 +167,7 @@ jobs:
 
       - name: Run Claims training smoke test
         run: |
-          python -m src.train
+          PYTHONPATH="$GITHUB_WORKSPACE/${{ env.CLAIMS_PROJECT_DIR }}" python -m src.train
 
       - name: Run Claims tests
         run: |
