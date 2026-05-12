@@ -131,6 +131,9 @@ jobs:
       run:
         working-directory: ${{ env.CLAIMS_PROJECT_DIR }}
 
+    env:
+      PYTHONPATH: .
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
