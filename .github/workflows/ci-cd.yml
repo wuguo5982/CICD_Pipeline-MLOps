@@ -1,4 +1,5 @@
-name: CMS FWA CI/CD
+
+name: Multi-Project AWS CI/CD
 
 on:
   push:
@@ -15,22 +16,25 @@ on:
 
 env:
   AWS_REGION: us-east-1
-  ECR_REPOSITORY: cms-fwa-rag-chatbot
-  IMAGE_NAME: cms-fwa-rag-chatbot
-  PROJECT_DIR: "Deployment of CMS Healthcare Multi-Agent RAG"
+
+  CMS_PROJECT_DIR: "Deployment of CMS Healthcare Multi-Agent RAG"
+  CMS_ECR_REPOSITORY: cms-fwa-rag-chatbot
+  CMS_IMAGE_NAME: cms-fwa-rag-chatbot
+
+  CLAIMS_PROJECT_DIR: "End_to_End Claims Analytics"
+  CLAIMS_ECR_REPOSITORY: end-to-end-claims-analytics
+  CLAIMS_IMAGE_NAME: end-to-end-claims-analytics
 
 jobs:
-
-  test-build:
-    name: Test and Build
+  cms-test-build:
+    name: CMS RAG - Test and Build
     runs-on: ubuntu-latest
 
     defaults:
       run:
-        working-directory: ${{ env.PROJECT_DIR }}
+        working-directory: ${{ env.CMS_PROJECT_DIR }}
 
     steps:
-
       - name: Checkout repository
         uses: actions/checkout@v4
 
@@ -43,54 +47,52 @@ jobs:
         run: |
           python -m pip install --upgrade pip
 
-      - name: Install dependencies
+      - name: Install CMS dependencies
         run: |
           pip install -r requirements.txt
           pip install pytest
 
-      - name: Generate sample/demo data
+      - name: Generate CMS demo data
         run: |
           python -m src.generate_sample_data
 
-      - name: Build vector index
+      - name: Build CMS RAG index
         run: |
           python store_index.py
 
-      - name: Import smoke test
+      - name: Run CMS import smoke test
         run: |
           python scripts/check_imports.py
 
-      - name: Validate data files
+      - name: Validate CMS data files
         run: |
           python scripts/validate_data.py
 
-      - name: Compile Python files
+      - name: Compile CMS apps
         run: |
           python -m py_compile streamlit_app.py
           python -m py_compile app.py
 
-      - name: Run tests
+      - name: Run CMS tests
         run: |
           pytest -q
 
-      - name: Build Docker image
+      - name: Build CMS Docker image
         run: |
-          docker build -t $IMAGE_NAME:latest .
+          docker build -t $CMS_IMAGE_NAME:ci .
 
-  aws-ecr:
-    name: Push Docker Image to AWS ECR
+  cms-ecr-push:
+    name: CMS RAG - Push Docker Image to AWS ECR
     runs-on: ubuntu-latest
-
-    needs: test-build
+    needs: cms-test-build
 
     if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
 
     defaults:
       run:
-        working-directory: ${{ env.PROJECT_DIR }}
+        working-directory: ${{ env.CMS_PROJECT_DIR }}
 
     steps:
-
       - name: Checkout repository
         uses: actions/checkout@v4
 
@@ -99,32 +101,259 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-1
+          aws-region: ${{ env.AWS_REGION }}
 
       - name: Login to Amazon ECR
         uses: aws-actions/amazon-ecr-login@v2
 
-      - name: Create ECR repository if not exists
+      - name: Create CMS ECR repository if needed
         run: |
-          aws ecr describe-repositories --repository-names $ECR_REPOSITORY || \
-          aws ecr create-repository --repository-name $ECR_REPOSITORY
+          aws ecr describe-repositories --repository-names $CMS_ECR_REPOSITORY || \
+          aws ecr create-repository --repository-name $CMS_ECR_REPOSITORY
 
-      - name: Build Docker image
+      - name: Build, tag, and push CMS Docker image
         run: |
-          docker build -t $IMAGE_NAME:latest .
+          IMAGE_TAG=${{ github.sha }}
+          ECR_URI=${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{ env.CMS_ECR_REPOSITORY }}
 
-      - name: Tag Docker image
-        run: |
-          ECR_URI=${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{ env.ECR_REPOSITORY }}
+          docker build -t $CMS_IMAGE_NAME:$IMAGE_TAG .
+          docker tag $CMS_IMAGE_NAME:$IMAGE_TAG $ECR_URI:$IMAGE_TAG
+          docker tag $CMS_IMAGE_NAME:$IMAGE_TAG $ECR_URI:latest
 
-          docker tag $IMAGE_NAME:latest $ECR_URI:latest
-
-      - name: Push Docker image to ECR
-        run: |
-          ECR_URI=${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{ env.ECR_REPOSITORY }}
-
+          docker push $ECR_URI:$IMAGE_TAG
           docker push $ECR_URI:latest
 
-      - name: Deployment summary
+  claims-test-build:
+    name: Claims Analytics - Test and Build
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: ${{ env.CLAIMS_PROJECT_DIR }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Upgrade pip
         run: |
-          echo "Docker image successfully pushed to AWS ECR."
+          python -m pip install --upgrade pip
+
+      - name: Install Claims dependencies
+        run: |
+          pip install -r requirements.txt
+          pip install pytest
+
+      - name: Run Claims import smoke test
+        run: |
+          python scripts/check_imports.py
+
+      - name: Validate Claims data files
+        run: |
+          python scripts/validate_data.py
+
+      - name: Compile Claims apps
+        run: |
+          python -m py_compile app/api.py
+          python -m py_compile app/streamlit_app.py
+
+      - name: Run Claims training smoke test
+        run: |
+          python -m src.train
+
+      - name: Run Claims tests
+        run: |
+          pytest -q
+
+      - name: Build Claims Docker image
+        run: |
+          docker build -t $CLAIMS_IMAGE_NAME:ci .
+
+  claims-ecr-push:
+    name: Claims Analytics - Push Docker Image to AWS ECR
+    runs-on: ubuntu-latest
+    needs: claims-test-build
+
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+
+    defaults:
+      run:
+        working-directory: ${{ env.CLAIMS_PROJECT_DIR }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Create Claims ECR repository if needed
+        run: |
+          aws ecr describe-repositories --repository-names $CLAIMS_ECR_REPOSITORY || \
+          aws ecr create-repository --repository-name $CLAIMS_ECR_REPOSITORY
+
+      - name: Build, tag, and push Claims Docker image
+        run: |
+          IMAGE_TAG=${{ github.sha }}
+          ECR_URI=${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{ env.CLAIMS_ECR_REPOSITORY }}
+
+          docker build -t $CLAIMS_IMAGE_NAME:$IMAGE_TAG .
+          docker tag $CLAIMS_IMAGE_NAME:$IMAGE_TAG $ECR_URI:$IMAGE_TAG
+          docker tag $CLAIMS_IMAGE_NAME:$IMAGE_TAG $ECR_URI:latest
+
+          docker push $ECR_URI:$IMAGE_TAG
+          docker push $ECR_URI:latest
+
+
+
+
+
+
+
+
+
+
+
+
+# name: CMS FWA CI/CD
+
+# on:
+#   push:
+#     branches:
+#       - main
+#       - master
+
+#   pull_request:
+#     branches:
+#       - main
+#       - master
+
+#   workflow_dispatch:
+
+# env:
+#   AWS_REGION: us-east-1
+#   ECR_REPOSITORY: cms-fwa-rag-chatbot
+#   IMAGE_NAME: cms-fwa-rag-chatbot
+#   PROJECT_DIR: "Deployment of CMS Healthcare Multi-Agent RAG"
+
+# jobs:
+
+#   test-build:
+#     name: Test and Build
+#     runs-on: ubuntu-latest
+
+#     defaults:
+#       run:
+#         working-directory: ${{ env.PROJECT_DIR }}
+
+#     steps:
+
+#       - name: Checkout repository
+#         uses: actions/checkout@v4
+
+#       - name: Set up Python
+#         uses: actions/setup-python@v5
+#         with:
+#           python-version: "3.11"
+
+#       - name: Upgrade pip
+#         run: |
+#           python -m pip install --upgrade pip
+
+#       - name: Install dependencies
+#         run: |
+#           pip install -r requirements.txt
+#           pip install pytest
+
+#       - name: Generate sample/demo data
+#         run: |
+#           python -m src.generate_sample_data
+
+#       - name: Build vector index
+#         run: |
+#           python store_index.py
+
+#       - name: Import smoke test
+#         run: |
+#           python scripts/check_imports.py
+
+#       - name: Validate data files
+#         run: |
+#           python scripts/validate_data.py
+
+#       - name: Compile Python files
+#         run: |
+#           python -m py_compile streamlit_app.py
+#           python -m py_compile app.py
+
+#       - name: Run tests
+#         run: |
+#           pytest -q
+
+#       - name: Build Docker image
+#         run: |
+#           docker build -t $IMAGE_NAME:latest .
+
+#   aws-ecr:
+#     name: Push Docker Image to AWS ECR
+#     runs-on: ubuntu-latest
+
+#     needs: test-build
+
+#     if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+
+#     defaults:
+#       run:
+#         working-directory: ${{ env.PROJECT_DIR }}
+
+#     steps:
+
+#       - name: Checkout repository
+#         uses: actions/checkout@v4
+
+#       - name: Configure AWS credentials
+#         uses: aws-actions/configure-aws-credentials@v4
+#         with:
+#           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+#           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+#           aws-region: us-east-1
+
+#       - name: Login to Amazon ECR
+#         uses: aws-actions/amazon-ecr-login@v2
+
+#       - name: Create ECR repository if not exists
+#         run: |
+#           aws ecr describe-repositories --repository-names $ECR_REPOSITORY || \
+#           aws ecr create-repository --repository-name $ECR_REPOSITORY
+
+#       - name: Build Docker image
+#         run: |
+#           docker build -t $IMAGE_NAME:latest .
+
+#       - name: Tag Docker image
+#         run: |
+#           ECR_URI=${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{ env.ECR_REPOSITORY }}
+
+#           docker tag $IMAGE_NAME:latest $ECR_URI:latest
+
+#       - name: Push Docker image to ECR
+#         run: |
+#           ECR_URI=${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{ env.ECR_REPOSITORY }}
+
+#           docker push $ECR_URI:latest
+
+#       - name: Deployment summary
+#         run: |
+#           echo "Docker image successfully pushed to AWS ECR."
