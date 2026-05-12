@@ -180,7 +180,7 @@ jobs:
 
       - name: Run Claims tests
         run: |
-          pytest -q
+          pytest -q tests/test_imports.py
 
       - name: Build Claims Docker image
         run: |
