@@ -104,7 +104,7 @@ docker run -p 8501:8501 -e OPENAI_API_KEY=your_key healthcare-fwa-grounded-rag
 ![Merged_CICD](docs/images/Merged_CICD.png)
 
 
-![CICD_GitHub Actions](docs/images/CICD_GitHub Actions.png)
+![CICD_GitHub_Actions](docs/images/CICD_GitHub_Actions.png)
 
 
 ---
